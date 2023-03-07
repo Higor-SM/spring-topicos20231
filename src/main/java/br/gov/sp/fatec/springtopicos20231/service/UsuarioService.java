@@ -1,30 +1,35 @@
 package br.gov.sp.fatec.springtopicos20231.service;
-
 import java.util.List;
-
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.gov.sp.fatec.springtopicos20231.entity.Usuario;
+import br.gov.sp.fatec.springtopicos20231.exception.UsuarioNaoEncontradoException;
 import br.gov.sp.fatec.springtopicos20231.repository.UsuarioRepository;
 
 @Service
-public class UsuarioService {
-    
+public class UsuarioService implements IUsuarioService {
+
     @Autowired
-    private UsuarioRepository UsuarioRepository;
-
-    public Usuario novoUsuario(Usuario usuario){
+    private UsuarioRepository usuarioRepo;
+    public Usuario novoUsuario(Usuario usuario) {
         if(usuario == null 
-                || usuario.getNome() == null
-                || usuario.getSenha() == null){
-                throw new IllegalArgumentException("usuario e senha invalidos");
+                || usuario.getNome() == null 
+                || usuario.getSenha() == null) {
+            throw new IllegalArgumentException("Nome e senha inválidos!");
+        }
+        return usuarioRepo.save(usuario);
     }
-    return UsuarioRepository.save(usuario);
-}
-
-public List<Usuario> buscarTodosUsuarios(){
-    return UsuarioRepository.findAll();
-}
-
+    public List<Usuario> buscarTodosUsuarios() {
+        return usuarioRepo.findAll();
+    }
+    public Usuario buscarPorId(Long id) {
+        Optional<Usuario> usuarioOp = usuarioRepo.findById(id);
+        if(usuarioOp.isEmpty()) {
+            throw new UsuarioNaoEncontradoException("Usuário não existe!");
+        }
+        return usuarioOp.get();
+    }
+    
 }

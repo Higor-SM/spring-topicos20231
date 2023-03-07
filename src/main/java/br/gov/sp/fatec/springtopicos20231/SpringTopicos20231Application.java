@@ -8,6 +8,7 @@ public class SpringTopicos20231Application {
 
 	public static void main(String[] args) {
 		SpringApplication.run(SpringTopicos20231Application.class, args);
+		System.out.println("projeto iniciado na porta 8080");
 	}
 
 }
